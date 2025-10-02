@@ -7,7 +7,7 @@ import { KEY_CODES } from '@utils';
 import sr from '@utils/sr';
 import { usePrefersReducedMotion } from '@hooks';
 
-const StyledJobsSection = styled.section`
+const StyledEduSection = styled.section`
   max-width: 700px;
 
   .inner {
@@ -164,11 +164,11 @@ const StyledTabPanel = styled.div`
   }
 `;
 
-const Jobs = () => {
+const Education = () => {
   const data = useStaticQuery(graphql`
     query {
-      jobs: allMarkdownRemark(
-        filter: { fileAbsolutePath: { regex: "/content/jobs/" } }
+      education: allMarkdownRemark(
+        filter: { fileAbsolutePath: { regex: "/content/education/" } }
         sort: { fields: [frontmatter___date], order: DESC }
       ) {
         edges {
@@ -187,7 +187,7 @@ const Jobs = () => {
     }
   `);
 
-  const jobsData = data.jobs.edges;
+  const jobsData = data.education.edges;
 
   const [activeTabId, setActiveTabId] = useState(0);
   const [tabFocus, setTabFocus] = useState(null);
@@ -243,14 +243,14 @@ const Jobs = () => {
   };
 
   return (
-    <StyledJobsSection id="jobs" ref={revealContainer}>
-      <h2 className="numbered-heading">My Experiences</h2>
+    <StyledEduSection id="education" ref={revealContainer}>
+      <h2 className="numbered-heading">My Education</h2>
 
       <div className="inner">
         <StyledTabList role="tablist" aria-label="Job tabs" onKeyDown={e => onKeyDown(e)}>
           {jobsData &&
             jobsData.map(({ node }, i) => {
-              const { company } = node.frontmatter;
+              const { title } = node.frontmatter;
               return (
                 <StyledTabButton
                   key={i}
@@ -262,7 +262,7 @@ const Jobs = () => {
                   tabIndex={activeTabId === i ? '0' : '-1'}
                   aria-selected={activeTabId === i ? true : false}
                   aria-controls={`panel-${i}`}>
-                  <span>{company}</span>
+                  <span>{title}</span>
                 </StyledTabButton>
               );
             })}
@@ -303,8 +303,8 @@ const Jobs = () => {
             })}
         </StyledTabPanels>
       </div>
-    </StyledJobsSection>
+    </StyledEduSection>
   );
 };
 
-export default Jobs;
+export default Education;
