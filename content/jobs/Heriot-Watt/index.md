@@ -3,7 +3,7 @@ date: '2020-08-17'
 title: 'ePALS Focus Group'
 company: 'Heriot-Watt University Malaysia'
 location: 'Putrajaya'
-range: 'August - August 2021'
+range: 'August - August 2020'
 url: 'https://www.hw.ac.uk/malaysia'
 ---
 - Reviewed 12 effective learning modules provided to support new undergraduate students.
