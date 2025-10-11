@@ -68,12 +68,12 @@ const Hero = () => {
         I’m a Data Science postgraduate from{' '}
         <a href="https://www.hw.ac.uk/">
           Heriot-Watt University
-        </a>, currently actively seeking job opportunities.
+        </a>.
       </p>
 
       <p>
-        My projects in university includes a temperature forecasting model,
-        a never-losing tic-tac-toe AI agent and a music genre classification model.
+        Currently I am actively seeking job opportunities and self-learning more
+        about programming and statistics in my free time.
       </p>
     </>
   );

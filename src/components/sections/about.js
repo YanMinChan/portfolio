@@ -135,31 +135,36 @@ const About = () => {
         <StyledText>
           <div>
             <p>
-              Hello! My name is Yan Min and I recently graduated with an MSc in Data Science
-              from Heriot-Watt University. I enjoy processing data and telling stories from them.
+              Hello! I'm Yan Min, a Data Science postgraduate from{' '}
+              <a href="https://www.hw.ac.uk/">
+                Heriot-Watt University
+              </a>,
+              where I completed my MSc in September 2025, after earning
+              my BSc in Statistical Data Science in July 2023.
             </p>
 
             <p>
-              I am also somewhat a tech nerd, and I spend my free time working on customising my
-              workspace in Wezterm. Diving into it fresh and inexperienced also taught me more about
-              Windows and basic PowerShell scripting.
-            </p>
-
-            <p>
-              Some of the proudest project I've done both in university and personally includes {' '}
-              <a href="https://github.com/YanMinChan/analysis-sst">a temperature forecast model</a>,{' '}
-              <a href="https://github.com/YanMinChan/flight-check-in">a flight check-in simulator</a>,{' '}
-              <a href="https://github.com/YanMinChan/particle-swarm-optimisation">a neural network model</a>,
-              a tic-tac-toe AI agent and{' '}
-              <a href="https://github.com/YanMinChan/dotfiles-wezterm">my personal workspace setup.</a>
+              With a background in both Statistics and Data Science, I love diving into the
+              math behind machine learning models. I often try to rebuild them from scratch
+              just to understand how they work, and I really enjoy the process of coding.
+              I also like exploring datasets and discovering the stories hidden within them.
             </p>
 
             <p>Here are a few of my most experienced technologies:</p>
+
+            <ul className="skills-list" style={{ marginBottom: '1rem' }}>
+              {skills && skills.map((skill, i) => <li key={i}>{skill}</li>)}
+            </ul>
+
+            <p>
+              Outside of data and programming, I enjoy archery. I was part of my university's
+              archery competition team and I still practice it as a way to unwind and stay focused beyond work.
+            </p>
           </div>
 
-          <ul className="skills-list">
-            {skills && skills.map((skill, i) => <li key={i}>{skill}</li>)}
-          </ul>
+
+
+
         </StyledText>
 
         <StyledPic>
