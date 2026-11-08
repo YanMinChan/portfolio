@@ -1,0 +1,87 @@
+
+name: Deploy Portfolio
+
+on:
+  push:
+    tags:
+      - 'v[0-9]*'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: portfolio-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout release source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Verify release comes from main
+        shell: bash
+        run: |
+          git fetch origin main
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build Gatsby
+        run: yarn build
+        env:
+          CI: 'true'
+
+      - name: Prepare GitHub Pages files
+        run: touch public/.nojekyll
+
+      - name: Deploy and tag production
+        env:
+          GH_TOKEN: ${{ secrets.PRODUCTION_DEPLOY_TOKEN }}
+          PROD_REPO: YanMinChan/YanMinChan.github.io
+          RELEASE_TAG: ${{ github.ref_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git clone \
+            "https://x-access-token:${GH_TOKEN}@github.com/${PROD_REPO}.git" \
+            /tmp/portfolio-production
+
+          cd /tmp/portfolio-production
+          git switch main
+
+          if git rev-parse -q --verify "refs/tags/${RELEASE_TAG}" >/dev/null; then
+            echo "Release tag already exists in production."
+            exit 1
+          fi
+
+          find . -mindepth 1 -maxdepth 1 ! -name .git \
+            -exec rm -rf -- {} +
+
+          cp -a "$GITHUB_WORKSPACE/public/." .
+
+          git add -A
+
+          if ! git diff --cached --quiet; then
+            git commit -m "Deploy portfolio ${RELEASE_TAG}"
+            git push origin main
+          fi
+
+          git tag "${RELEASE_TAG}"
+          git push origin "refs/tags/${RELEASE_TAG}"
