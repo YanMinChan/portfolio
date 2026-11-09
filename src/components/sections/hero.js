@@ -60,20 +60,13 @@ const Hero = () => {
   }, []);
 
   const one = <h1>Hi, my name is</h1>;
-  const two = <h2 className="big-heading">Yan Min Chan</h2>;
-  const three = <h3 className="big-heading">I tell stories from data</h3>;
+  const two = <h2 className="big-heading">Yan Min Chan.</h2>;
+  const three = <h3 className="big-heading">I bridge data and software.</h3>;
   const four = (
     <>
       <p>
-        I’m a Data Science postgraduate from{' '}
-        <a href="https://www.hw.ac.uk/">
-          Heriot-Watt University
-        </a>.
-      </p>
-
-      <p>
-        Currently I am actively seeking job opportunities and self-learning more
-        about programming and statistics in my free time.
+        Software Engineer working in the FinTech industry
+        with a background in Data Science, exploring Machine Learning and MLOps.
       </p>
     </>
   );

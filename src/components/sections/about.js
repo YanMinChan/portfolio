@@ -12,6 +12,7 @@ const StyledAboutSection = styled.section`
     display: grid;
     grid-template-columns: 3fr 2fr;
     grid-gap: 50px;
+    text-align: justify;
 
     @media (max-width: 768px) {
       display: block;
@@ -125,7 +126,7 @@ const About = () => {
     sr.reveal(revealContainer.current, srConfig());
   }, []);
 
-  const skills = ['Python', 'PyTorch', 'Java', 'C#', 'R', 'SQL'];
+  const skills = ['Python', 'PHP', 'SQL', 'PL/SQL'];
 
   return (
     <StyledAboutSection id="about" ref={revealContainer}>
@@ -135,19 +136,16 @@ const About = () => {
         <StyledText>
           <div>
             <p>
-              Hello! I'm Yan Min, a Data Science postgraduate from{' '}
-              <a href="https://www.hw.ac.uk/">
-                Heriot-Watt University
-              </a>,
-              where I completed my MSc in September 2025, after earning
-              my BSc in Statistical Data Science in July 2023.
+              Hello! I'm Yan Min, a Software Engineer working in the FinTech industry
+              with a background in Data Science.
             </p>
 
             <p>
-              With a background in both Statistics and Data Science, I love diving into the
-              math behind machine learning models. I often try to rebuild them from scratch
-              just to understand how they work, and I really enjoy the process of coding.
-              I also like exploring datasets and discovering the stories hidden within them.
+              With a background in Software Engineering and Data Science, I enjoy solving
+              technical problems and learning how maintainable, scalable systems are designed 
+              and built. My interest lie at the intersection of software engineering and 
+              machine learning, particularly in understanding how machine learning models
+              can move from proof of concept to production-ready system.
             </p>
 
             <p>Here are a few of my most experienced technologies:</p>
@@ -157,8 +155,8 @@ const About = () => {
             </ul>
 
             <p>
-              Outside of data and programming, I enjoy archery. I was part of my university's
-              archery competition team and I still practice it as a way to unwind and stay focused beyond work.
+              Outside of programming, I enjoy archery. I was part of my university's
+              competetive archery team, and I continue to practice as a way to unwind and stay focused outside of work.
             </p>
           </div>
 
