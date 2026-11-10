@@ -141,11 +141,10 @@ const About = () => {
             </p>
 
             <p>
-              With a background in Software Engineering and Data Science, I enjoy solving
-              technical problems and learning how maintainable, scalable systems are designed 
-              and built. My interest lie at the intersection of software engineering and 
-              machine learning, particularly in understanding how machine learning models
-              can move from proof of concept to production-ready system.
+              I enjoy solving technical problems and learning how maintainable, scalable 
+              systems are designed and built. My interest lie at the intersection of 
+              software engineering and machine learning, particularly in understanding how 
+              machine learning models can move from proof of concept to production-ready system.
             </p>
 
             <p>Here are a few of my most experienced technologies:</p>

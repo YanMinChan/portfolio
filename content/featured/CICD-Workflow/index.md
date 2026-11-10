@@ -1,7 +1,7 @@
 ---
 date: '1'
 title: 'CI/CD Workflow'
-cover: './CICD.png'
+cover: './CICD2.png'
 github: 'https://github.com/YanMinChan/portfolio'
 tech:
   - YAML
