@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, createRef } from 'react';
 import { Link } from 'gatsby';
 import PropTypes from 'prop-types';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -32,9 +32,9 @@ const StyledHeader = styled.header`
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    ${props =>
-    props.scrollDirection === 'up' &&
-      !props.scrolledToTop &&
+    ${({$scrollDirection, $scrolledToTop}) =>
+    $scrollDirection === 'up' &&
+      !$scrolledToTop &&
       css`
         height: var(--nav-scroll-height);
         transform: translateY(0px);
@@ -42,9 +42,9 @@ const StyledHeader = styled.header`
         box-shadow: 0 10px 30px -10px var(--navy-shadow);
       `};
 
-    ${props =>
-    props.scrollDirection === 'down' &&
-      !props.scrolledToTop &&
+    ${({$scrollDirection, $scrolledToTop}) =>
+    $scrollDirection === 'down' &&
+      !$scrolledToTop &&
       css`
         height: var(--nav-scroll-height);
         transform: translateY(calc(var(--nav-scroll-height) * -1));
@@ -156,6 +156,11 @@ const Nav = ({ isHome }) => {
   const [scrolledToTop, setScrolledToTop] = useState(true);
   const prefersReducedMotion = usePrefersReducedMotion();
 
+  const logoRef = useRef(null);
+  const linkRefs = useRef([]);
+  const resumeRef = useRef(null);
+  const menuRef = useRef(null);
+
   const handleScroll = () => {
     setScrolledToTop(window.pageYOffset < 50);
   };
@@ -212,7 +217,7 @@ const Nav = ({ isHome }) => {
   );
 
   return (
-    <StyledHeader scrollDirection={scrollDirection} scrolledToTop={scrolledToTop}>
+    <StyledHeader $scrollDirection={scrollDirection} $scrolledToTop={scrolledToTop}>
       <StyledNav>
         {prefersReducedMotion ? (
           <>
@@ -236,7 +241,7 @@ const Nav = ({ isHome }) => {
           <>
             <TransitionGroup component={null}>
               {isMounted && (
-                <CSSTransition classNames={fadeClass} timeout={timeout}>
+                <CSSTransition nodeRef={logoRef} classNames={fadeClass} timeout={timeout}>
                   <>{Logo}</>
                 </CSSTransition>
               )}
@@ -247,20 +252,23 @@ const Nav = ({ isHome }) => {
                 <TransitionGroup component={null}>
                   {isMounted &&
                     navLinks &&
-                    navLinks.map(({ url, name }, i) => (
-                      <CSSTransition key={i} classNames={fadeDownClass} timeout={timeout}>
-                        <li key={i} style={{ transitionDelay: `${isHome ? i * 100 : 0}ms` }}>
-                          <Link to={url}>{name}</Link>
-                        </li>
-                      </CSSTransition>
-                    ))}
+                    navLinks.map(({ url, name }, i) => {
+                      const nodeRef = linkRefs.current[i] || (linkRefs.current[i] = createRef());
+                      return (
+                        <CSSTransition nodeRef={nodeRef} key={i} classNames={fadeDownClass} timeout={timeout}>
+                          <li ref={nodeRef} key={i} style={{ transitionDelay: `${isHome ? i * 100 : 0}ms` }}>
+                            <Link to={url}>{name}</Link>
+                          </li>
+                        </CSSTransition>
+                      )
+                    })}
                 </TransitionGroup>
               </ol>
 
               <TransitionGroup component={null}>
                 {isMounted && (
-                  <CSSTransition classNames={fadeDownClass} timeout={timeout}>
-                    <div style={{ transitionDelay: `${isHome ? navLinks.length * 100 : 0}ms` }}>
+                  <CSSTransition nodeRef={resumeRef} classNames={fadeDownClass} timeout={timeout}>
+                    <div ref={resumeRef} style={{ transitionDelay: `${isHome ? navLinks.length * 100 : 0}ms` }}>
                       {ResumeLink}
                     </div>
                   </CSSTransition>
@@ -270,7 +278,7 @@ const Nav = ({ isHome }) => {
 
             <TransitionGroup component={null}>
               {isMounted && (
-                <CSSTransition classNames={fadeClass} timeout={timeout}>
+                <CSSTransition nodeRef={menuRef} classNames={fadeClass} timeout={timeout}>
                   <Menu />
                 </CSSTransition>
               )}

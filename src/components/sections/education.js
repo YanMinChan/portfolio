@@ -75,7 +75,7 @@ const StyledTabButton = styled.button`
   padding: 0 20px 2px;
   border-left: 2px solid var(--lightest-navy);
   background-color: transparent;
-  color: ${({ isActive }) => (isActive ? 'var(--green)' : 'var(--slate)')};
+  color: ${({ $isActive }) => ($isActive ? 'var(--green)' : 'var(--slate)')};
   font-family: var(--font-mono);
   font-size: var(--fz-xs);
   text-align: left;
@@ -108,7 +108,7 @@ const StyledHighlight = styled.div`
   height: var(--tab-height);
   border-radius: var(--border-radius);
   background: var(--green);
-  transform: translateY(calc(${({ activeTabId }) => activeTabId} * var(--tab-height)));
+  transform: translateY(calc(${({ $activeTabId }) => $activeTabId} * var(--tab-height)));
   transition: transform 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
   transition-delay: 0.1s;
 
@@ -119,7 +119,7 @@ const StyledHighlight = styled.div`
     max-width: var(--tab-width);
     height: 2px;
     margin-left: 50px;
-    transform: translateX(calc(${({ activeTabId }) => activeTabId} * var(--tab-width)));
+    transform: translateX(calc(${({ $activeTabId }) => $activeTabId} * var(--tab-width)));
   }
   @media (max-width: 480px) {
     margin-left: 25px;
@@ -168,8 +168,8 @@ const Education = () => {
   const data = useStaticQuery(graphql`
     query {
       education: allMarkdownRemark(
-        filter: { fileAbsolutePath: { regex: "/content/education/" } }
-        sort: { fields: [frontmatter___date], order: DESC }
+        filter: {fileAbsolutePath: {regex: "/content/education/"}}
+        sort: {frontmatter: {date: DESC}}
       ) {
         edges {
           node {
@@ -194,6 +194,7 @@ const Education = () => {
   const tabs = useRef([]);
   const revealContainer = useRef(null);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const panelRefs = useRef([]);
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -254,19 +255,19 @@ const Education = () => {
               return (
                 <StyledTabButton
                   key={i}
-                  isActive={activeTabId === i}
+                  $isActive={$activeTabId === i}
                   onClick={() => setActiveTabId(i)}
                   ref={el => (tabs.current[i] = el)}
                   id={`tab-${i}`}
                   role="tab"
-                  tabIndex={activeTabId === i ? '0' : '-1'}
-                  aria-selected={activeTabId === i ? true : false}
+                  tabIndex={$activeTabId === i ? '0' : '-1'}
+                  aria-selected={$activeTabId === i ? true : false}
                   aria-controls={`panel-${i}`}>
                   <span>{title}</span>
                 </StyledTabButton>
               );
             })}
-          <StyledHighlight activeTabId={activeTabId} />
+          <StyledHighlight $activeTabId={activeTabId} />
         </StyledTabList>
 
         <StyledTabPanels>
@@ -275,15 +276,17 @@ const Education = () => {
               const { frontmatter, html } = node;
               const { title, url, company, range } = frontmatter;
 
+              const nodeRef = panelRefs.current[i] || (panelRefs.current[i] = React.createRef());
               return (
-                <CSSTransition key={i} in={activeTabId === i} timeout={250} classNames="fade">
+                <CSSTransition nodeRef={nodeRef} key={i} in={$activeTabId === i} timeout={250} classNames="fade">
                   <StyledTabPanel
+                    ref={nodeRef}
                     id={`panel-${i}`}
                     role="tabpanel"
-                    tabIndex={activeTabId === i ? '0' : '-1'}
+                    tabIndex={$activeTabId === i ? '0' : '-1'}
                     aria-labelledby={`tab-${i}`}
-                    aria-hidden={activeTabId !== i}
-                    hidden={activeTabId !== i}>
+                    aria-hidden={$activeTabId !== i}
+                    hidden={$activeTabId !== i}>
                     <h3>
                       <span>{title}</span>
                       <span className="company">

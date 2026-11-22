@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, createRef } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled from 'styled-components';
 import { navDelay, loaderDelay } from '@utils';
@@ -49,6 +49,7 @@ const StyledHeroSection = styled.section`
 const Hero = () => {
   const [isMounted, setIsMounted] = useState(false);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const heroRefs = useRef([]);
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -93,11 +94,14 @@ const Hero = () => {
       ) : (
         <TransitionGroup component={null}>
           {isMounted &&
-            items.map((item, i) => (
-              <CSSTransition key={i} classNames="fadeup" timeout={loaderDelay}>
-                <div style={{ transitionDelay: `${i + 1}00ms` }}>{item}</div>
+            items.map((item, i) => {
+              const nodeRef = heroRefs.current[i] || (heroRefs.current[i] = createRef());
+              return (
+              <CSSTransition nodeRef={nodeRef} key={i} classNames="fadeup" timeout={loaderDelay}>
+                <div ref={nodeRef} style={{ transitionDelay: `${i + 1}00ms` }}>{item}</div>
               </CSSTransition>
-            ))}
+            )
+            })}
         </TransitionGroup>
       )}
     </StyledHeroSection>
