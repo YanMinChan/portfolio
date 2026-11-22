@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, createRef } from 'react';
 import { Link, useStaticQuery, graphql } from 'gatsby';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import styled from 'styled-components';
@@ -169,11 +169,8 @@ const Projects = () => {
   const data = useStaticQuery(graphql`
     query {
       projects: allMarkdownRemark(
-        filter: {
-          fileAbsolutePath: { regex: "/content/projects/" }
-          frontmatter: { showInProjects: { ne: false } }
-        }
-        sort: { fields: [frontmatter___date], order: DESC }
+        filter: {fileAbsolutePath: {regex: "/content/projects/"}, frontmatter: {showInProjects: {ne: false}}}
+        sort: {frontmatter: {date: DESC}}
       ) {
         edges {
           node {
@@ -195,6 +192,7 @@ const Projects = () => {
   const revealArchiveLink = useRef(null);
   const revealProjects = useRef([]);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const projectRefs = useRef([]);
 
   useEffect(() => {
     if (prefersReducedMotion) {
@@ -282,13 +280,18 @@ const Projects = () => {
         ) : (
           <TransitionGroup component={null}>
             {projectsToShow &&
-              projectsToShow.map(({ node }, i) => (
+              projectsToShow.map(({ node }, i) => {
+                const nodeRef = projectRefs.current[i] || (projectRefs.current[i] = createRef());
+                
+                return (
                 <CSSTransition
+                  nodeRef={nodeRef}
                   key={i}
                   classNames="fadeup"
                   timeout={i >= GRID_LIMIT ? (i - GRID_LIMIT) * 300 : 300}
                   exit={false}>
                   <StyledProject
+                    ref={nodeRef}
                     key={i}
                     ref={el => (revealProjects.current[i] = el)}
                     style={{
@@ -297,7 +300,8 @@ const Projects = () => {
                     {projectInner(node)}
                   </StyledProject>
                 </CSSTransition>
-              ))}
+                );
+              })}
           </TransitionGroup>
         )}
       </ul>
